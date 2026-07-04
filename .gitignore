@@ -1,0 +1,22 @@
+# 데이터 산출물
+data/*.db
+reports/*
+!reports/.gitkeep
+
+# 정답지: 면접관 비공개 (공개 레포 노출 방지)
+data/answer.md
+
+# 파이썬
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS
+.DS_Store
+
+# plan-guard 위치 아티팩트
+.plan-guard-position.json
+
+# 설계·계획·기록 문서 (저장소 비공개)
+docs/

@@ -1,0 +1,35 @@
+{
+  "name": "정산대사 스켈레톤 (HTTP)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "a1b2c3d4-0001-0001-0001-000000000001",
+      "name": "When clicking 'Test workflow'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "url": "http://127.0.0.1:8787/run",
+        "options": { "timeout": 300000 }
+      },
+      "id": "a1b2c3d4-0002-0002-0002-000000000002",
+      "name": "정산 대사 서비스 호출",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [240, 0]
+    }
+  ],
+  "connections": {
+    "When clicking 'Test workflow'": {
+      "main": [
+        [
+          { "node": "정산 대사 서비스 호출", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": {},
+  "active": false
+}

@@ -1,0 +1,61 @@
+{
+  "name": "정산대사 전체 (규칙→에이전트 가시화, HTTP)",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "b1c2d3e4-0001-0001-0001-000000000001",
+      "name": "When clicking 'Test workflow'",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [0, 0]
+    },
+    {
+      "parameters": {
+        "url": "http://127.0.0.1:8787/reconcile",
+        "options": {}
+      },
+      "id": "b1c2d3e4-0002-0002-0002-000000000002",
+      "name": "규칙 대조 (/reconcile)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [220, 0],
+      "notes": "불일치 건 배열 반환. 각 요소가 개별 item으로 분리되지 않으면 이 뒤에 Split Out 노드를 추가하라."
+    },
+    {
+      "parameters": {
+        "url": "=http://127.0.0.1:8787/investigate?partner={{ $json.partner }}&diff={{ $json.diff }}",
+        "options": { "timeout": 300000 }
+      },
+      "id": "b1c2d3e4-0003-0003-0003-000000000003",
+      "name": "에이전트 조사 (/investigate)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 0],
+      "notes": "불일치 건마다 hermes -z 호출(SQL 조사). 판정: 정상 / 에스컬레이션."
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "id": "b1c2d3e4-0004-0004-0004-000000000004",
+      "name": "결과 취합",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [660, 0]
+    }
+  ],
+  "connections": {
+    "When clicking 'Test workflow'": {
+      "main": [[{ "node": "규칙 대조 (/reconcile)", "type": "main", "index": 0 }]]
+    },
+    "규칙 대조 (/reconcile)": {
+      "main": [[{ "node": "에이전트 조사 (/investigate)", "type": "main", "index": 0 }]]
+    },
+    "에이전트 조사 (/investigate)": {
+      "main": [[{ "node": "결과 취합", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {},
+  "active": false
+}
